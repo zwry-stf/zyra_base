@@ -43,10 +43,8 @@ public:
             }
         );
     */
-    void initialize_layer(std::function<
-                              void(std::function<
-                                  void(const string_token& name, const xstr& module, const default_vtable& vtable, int index)>
-                               )>&& fn) {
+    template <class Fn>
+    void initialize_layer(Fn&& fn) {
         fn([this](const string_token& name, const xstr& module, const default_vtable& vtable, int index = -1) {
             this->add(name, module, vtable, index);
             }

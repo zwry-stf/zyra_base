@@ -40,10 +40,8 @@ public:
             }
         );
     */
-    void initialize_layer(std::function<
-                              void(std::function<
-                                  void(const string_token& name, const xstr& module, const default_signature& signature)>
-                               )>&& fn) {
+    template <class Fn>
+    void initialize_layer(Fn&& fn) {
         fn([this](const string_token& name, const xstr& module, const default_signature& signature) {
             this->add(name, module, signature);
             }

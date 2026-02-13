@@ -34,11 +34,8 @@ public:
             }
         );
     */
-    void initialize_layer(std::function<
-                              void(std::function<
-                                  void(const string_token& name, const xstr& module, const basic_xstr<char, 156>& export_name)>,
-                                  std::function<void(const string_token& name, void*)>
-                               )>&& fn) {
+    template <class Fn>
+    void initialize_layer(Fn&& fn) {
         fn([this](const string_token& name, const xstr& module, const basic_xstr<char, 156>& export_name) {
             this->add_exported(name, module, export_name);
             },
