@@ -24,12 +24,11 @@ void c_hooks::post_init()
 
 void c_hooks::destroy()
 {
-    DetourTransactionBegin();
-    DetourUpdateThread(GetCurrentThread());
+    pre_init();
 
     remove_hooks();
 
-    DetourTransactionCommit();
+    post_init();
 }
 
 #if not defined(ZYRA_PUBLIC)
@@ -109,20 +108,30 @@ void c_hooks::initalize_layer(const string_token& name)
 void c_hooks::remove_hooks()
 {
     for (auto& hook : inline_hooks_) {
+        if (!hook.attached)
+            continue;
         DetourDetach(&hook.original, hook.detour);
+        hook.attached = false;
     }
 
     for (auto& hook : vtable_hooks_) {
+        if (!hook.attached)
+            continue;
+
         assert(hook.source != nullptr);
 
-        DWORD oldProtect = 0;
-        if (!VirtualProtect(hook.source, sizeof(void*), PAGE_READWRITE, &oldProtect)) {
+        DWORD old_protect = 0;
+        if (!VirtualProtect(hook.source, sizeof(void*), PAGE_READWRITE, &old_protect)) {
             log::print_warning("failed to remove hook '{}', mem protect failed.", hook.name);
         }
         else {
-            *(void**)(hook.source) = hook.original;
-            VirtualProtect(hook.source, sizeof(void*), oldProtect, &oldProtect);
+            InterlockedExchangePointer(
+                reinterpret_cast<volatile PVOID*>(hook.source),
+                hook.original
+            );
+            VirtualProtect(hook.source, sizeof(void*), old_protect, &old_protect);
         }
+        hook.attached = false;
     }
 }
 
@@ -135,6 +144,7 @@ bool c_hooks::attach_hook(inline_hook_t& hook)
         return false;
     }
 
+    hook.attached = true;
     log::print_debug("hook attached '{}' at {}", hook.name, hook.address);
 
     return true;
@@ -145,8 +155,8 @@ bool c_hooks::attach_hook(vtable_hook_t& hook)
     if (hook.source == nullptr)
         hook.source = g_vtables()->get_function_source<void*>(hook.name);
 
-    DWORD oldProtect = 0;
-    if (!VirtualProtect(hook.source, sizeof(void*), PAGE_READWRITE, &oldProtect)) {
+    DWORD old_protect = 0;
+    if (!VirtualProtect(hook.source, sizeof(void*), PAGE_READWRITE, &old_protect)) {
         log::print_error("failed to change mem protection for hook '{}' at {}", hook.name, hook.source);
         return false;
     }
@@ -156,10 +166,11 @@ bool c_hooks::attach_hook(vtable_hook_t& hook)
         hook.detour
     );
 
-    if (!VirtualProtect(hook.source, sizeof(void*), oldProtect, &oldProtect)) {
+    if (!VirtualProtect(hook.source, sizeof(void*), old_protect, &old_protect)) {
         log::print_warning("failed to change back protection for hook '{}' at {}", hook.name, hook.source);
     }
 
+    hook.attached = true;
     log::print_debug("hook attached '{}' at {}", hook.name, hook.source);
 
     return true;

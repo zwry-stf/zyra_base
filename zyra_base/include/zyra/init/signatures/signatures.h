@@ -77,7 +77,7 @@ zyra_define_access(c_signatures, g_signatures);
 
 
 #define zyra_get_signature_ex(_var, _name, _type) \
-static auto _var = g_signatures()->get<_type>(_name)
+static auto _var = ::zyra::g_signatures()->get<_type>(_name)
 
 #define zyra_get_signature(_var, _name, _ret, _args) \
 zyra_get_signature_ex(_var, _name, _ret(*)_args)

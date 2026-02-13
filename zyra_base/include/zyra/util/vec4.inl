@@ -1,6 +1,7 @@
 #pragma once
-#include "vec4.h"
 
+
+zyra_begin_
 
 // constructors
 template<vec4_type _Type>
@@ -265,13 +266,13 @@ zyra_always_inline constexpr _Type vec4_basic<_Type>::dot(const vec4_basic<_Type
 template<vec4_type _Type>
 zyra_always_inline constexpr vec4_basic<_Type> vec4_basic<_Type>::to_rad() const
 {
-    return *this * static_cast<_Type>(math::d2r);
+    return *this * static_cast<_Type>(math::constants::k_d2r);
 }
 
 template<vec4_type _Type>
 zyra_always_inline constexpr vec4_basic<_Type> vec4_basic<_Type>::to_deg() const
 {
-    return *this * static_cast<_Type>(math::r2d);
+    return *this * static_cast<_Type>(math::constants::k_r2d);
 }
 
 template<vec4_type _Type>
@@ -285,3 +286,5 @@ zyra_always_inline constexpr vec4_basic<_Type> vec4_basic<_Type>::lerp(const vec
 {
     return *this + (v - *this) * t;
 }
+
+zyra_end_

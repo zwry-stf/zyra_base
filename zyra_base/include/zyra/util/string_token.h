@@ -26,7 +26,7 @@ public:
 
     template <size_t N>
     consteval string_token(const char(&text)[N])
-        : hash_(murmur2::hash_a1_const<false>(text, 0x859312854u))
+        : hash_(murmur2::hash_a1_const<false>(text, 0x85931285u))
 #if not defined(ZYRA_PUBLIC)
         , debug_name_(text, text + N - 1u)
 #endif // ZYRA_PUBLIC

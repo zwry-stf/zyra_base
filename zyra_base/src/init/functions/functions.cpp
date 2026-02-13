@@ -3,6 +3,7 @@
 #include <zyra/util/log.h>
 #include "module.h"
 
+
 zyra_begin_
 
 void* c_functions::get_impl(const string_token& hash) const

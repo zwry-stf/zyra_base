@@ -19,19 +19,21 @@ class c_hooks {
 private:
     struct inline_hook_t {
         string_token layer_name; // the name of the layer
-        void* detour   = 0;     // the detour to jump to
-        void* address  = 0;     // the original functions address
+        void* detour = 0;     // the detour to jump to
+        void* address = 0;     // the original functions address
         void* original = 0;     // the original functions trampoline
         string_token name;      // the name of the hook and potentially the name to search for (signatures/vtables/functions) if address is 0
+        bool attached{};
     };
     std::vector<inline_hook_t> inline_hooks_;
 
     struct vtable_hook_t {
         string_token layer_name; // the name of the layer
-        void* detour   = 0;     // the detour to jump to
-        void* source   = 0;     // the address where the function pointer will be written to
+        void* detour = 0;     // the detour to jump to
+        void* source = 0;     // the address where the function pointer will be written to
         void* original = 0;     // the original function
         string_token name;      // the name of the hook
+        bool attached{};
     };
     std::vector<vtable_hook_t> vtable_hooks_;
 
@@ -135,23 +137,23 @@ struct global_vtable_hook_loader_t {
 inline static _ret hk##_name _params
 
 #define zyra_get_original(_name) \
-static auto original = g_hooks()->get_original< \
+static auto original = ::zyra::g_hooks()->get_original< \
     decltype(&hk##_name)> \
     (#_name)
 
 #define zyra_get_original_ex(_var, _name, _ret, _args) \
-static auto _var = g_hooks()->get_original< \
+static auto _var = ::zyra::g_hooks()->get_original< \
     _ret(*)_args> \
     (_name)
 
 #define zyra_link_inline_hook(_name, _layer_name, _debug_feature) \
 namespace { \
-    inline static auto _reg_##_name = global_inline_hook_loader_t(hk##_name, #_name, _layer_name, _debug_feature); \
+    inline static auto _reg_##_name = ::zyra::global_inline_hook_loader_t(hk##_name, #_name, _layer_name, _debug_feature); \
 }
 
 #define zyra_link_vtable_hook(_name, _layer_name, _debug_feature) \
 namespace { \
-    inline static auto _reg_##_name = global_vtable_hook_loader_t(hk##_name, #_name, _layer_name, _debug_feature); \
+    inline static auto _reg_##_name = ::zyra::global_vtable_hook_loader_t(hk##_name, #_name, _layer_name, _debug_feature); \
 }
 
 zyra_end_

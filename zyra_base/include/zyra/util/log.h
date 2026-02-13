@@ -15,7 +15,7 @@ namespace log {
 	extern void print_impl(const std::string& text);
 
 	template <typename... Args>
-	void print_ln(std::format_string<Args...> fmt, Args&&... args) {
+	void println(std::format_string<Args...> fmt, Args&&... args) {
 		print_impl(std::format(fmt, std::forward<Args>(args)...) + "\n");
 	}
 	template <typename... Args>

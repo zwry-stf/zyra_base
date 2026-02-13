@@ -71,9 +71,8 @@ public:
     [[nodiscard]] zyra_always_inline constexpr vec4_basic<_Type> lerp(const vec4_basic<_Type>& v, const _Type t) const;
 };
 
-
 using vec4 = vec4_basic<float>;
 
-#include "vec4.inl"
-
 zyra_end_
+
+#include "vec4.inl"

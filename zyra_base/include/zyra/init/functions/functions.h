@@ -35,6 +35,10 @@ public:
         );
     */
     template <class Fn>
+        requires (std::invocable<Fn,
+            std::function<void(const string_token&, const xstr&, const basic_xstr<char, 156>&)>,
+            std::function<void(const string_token& name, void* address)>
+        >)
     void initialize_layer(Fn&& fn) {
         fn([this](const string_token& name, const xstr& module, const basic_xstr<char, 156>& export_name) {
             this->add_exported(name, module, export_name);
@@ -63,7 +67,7 @@ zyra_define_access(c_functions, g_functions);
 
 
 #define _get_function(_var, _name, _ret, _args) \
-static auto _var = g_functions()->get< \
+static auto _var = ::zyra::g_functions()->get< \
     _ret(*)_args > \
     (_name)
 

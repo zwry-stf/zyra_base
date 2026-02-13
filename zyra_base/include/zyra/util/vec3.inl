@@ -1,6 +1,7 @@
 #pragma once
-#include "vec3.h"
 
+
+zyra_begin_
 
 // constructors
 template<vec3_type _Type>
@@ -269,13 +270,13 @@ zyra_always_inline constexpr vec3_basic<_Type> vec3_basic<_Type>::cross(const ve
 template<vec3_type _Type>
 zyra_always_inline constexpr vec3_basic<_Type> vec3_basic<_Type>::to_rad() const
 {
-    return *this * static_cast<_Type>(math::d2r);
+    return *this * static_cast<_Type>(math::constants::k_d2r);
 }
 
 template<vec3_type _Type>
 zyra_always_inline constexpr vec3_basic<_Type> vec3_basic<_Type>::to_deg() const
 {
-    return *this * static_cast<_Type>(math::r2d);
+    return *this * static_cast<_Type>(math::constants::k_r2d);
 }
 
 template<vec3_type _Type>
@@ -293,8 +294,8 @@ zyra_always_inline constexpr vec3_basic<_Type> vec3_basic<_Type>::lerp(const vec
 template<vec3_type _Type>
 zyra_always_inline void vec3_basic<_Type>::to_directions(vec3_basic<_Type>* forward, vec3_basic<_Type>* right, vec3_basic<_Type>* up) const
 {
-    const _Type angle_rad_x = x * static_cast<_Type>(math::d2r);
-    const _Type angle_rad_y = y * static_cast<_Type>(math::d2r);
+    const _Type angle_rad_x = x * static_cast<_Type>(math::constants::k_d2r);
+    const _Type angle_rad_y = y * static_cast<_Type>(math::constants::k_d2r);
 
     const _Type sp = std::sin(angle_rad_x), cp = std::cos(angle_rad_x);
     const _Type sy = std::sin(angle_rad_y), cy = std::cos(angle_rad_y);
@@ -316,7 +317,7 @@ zyra_always_inline _Type vec3_basic<_Type>::get_angle_x() const
     if (l2d < _Type(1e-7))
         return kNull;
 
-    const _Type pitch = std::atan2(-z, l2d) * static_cast<_Type>(math::r2d);
+    const _Type pitch = std::atan2(-z, l2d) * static_cast<_Type>(math::constants::k_r2d);
 
     return std::clamp(
         pitch,
@@ -332,7 +333,7 @@ zyra_always_inline _Type vec3_basic<_Type>::get_angle_y() const
     if (l2d < static_cast<_Type>(1e-7))
         return kNull;
 
-    _Type yaw = std::atan2f(y, x) * static_cast<_Type>(math::r2d);
+    _Type yaw = std::atan2f(y, x) * static_cast<_Type>(math::constants::k_r2d);
 
     while (yaw > _Type(180)) yaw -= _Type(360);
     while (yaw < _Type(-180)) yaw += _Type(360);
@@ -349,3 +350,5 @@ zyra_always_inline vec3_basic<_Type> vec3_basic<_Type>::to_angles() const
         kNull
     );
 }
+
+zyra_end_

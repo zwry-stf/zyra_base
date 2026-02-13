@@ -79,9 +79,8 @@ public:
     [[nodiscard]] zyra_always_inline vec3_basic<_Type> to_angles() const;
 };
 
-
 using vec3 = vec3_basic<float>;
 
-#include "vec3.inl"
-
 zyra_end_
+
+#include "vec3.inl"
