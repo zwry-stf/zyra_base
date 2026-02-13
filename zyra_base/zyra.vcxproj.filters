@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{89AF369E-F58E-B539-FEA6-40106A051C9B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\zyra">
+      <UniqueIdentifier>{DE44E669-CAA7-750E-732D-AEC45F6F4191}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\zyra\cheat">
+      <UniqueIdentifier>{D2A4666C-BE88-27C2-27E9-211513EC1144}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\zyra\cheat\sdk">
+      <UniqueIdentifier>{237A0CD6-0F74-3528-F8E0-CB38E4799B94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\zyra\init">
+      <UniqueIdentifier>{01F5D731-6D0B-D6C7-B682-61E922D8A64F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\zyra\init\functions">
+      <UniqueIdentifier>{C946EA0D-3554-18F4-BE3A-14DF2A47E4AA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\zyra\init\hooks">
+      <UniqueIdentifier>{34207135-A057-B9CC-A961-1DF01518E0C5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\zyra\init\signatures">
+      <UniqueIdentifier>{35605337-211B-43E3-CAD2-BB2DB66C8D73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\zyra\init\vtables">
+      <UniqueIdentifier>{21C49096-8D86-C420-D636-53AD42389DFE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\zyra\util">
+      <UniqueIdentifier>{0BA3DE31-77B9-DCC7-C030-68E92C86AD4F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\init">
+      <UniqueIdentifier>{B0A431CF-9C71-8CDA-C58A-7A82B1B6C168}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\init\functions">
+      <UniqueIdentifier>{389DCA78-2481-8BCE-8DE1-852179E47550}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\init\hooks">
+      <UniqueIdentifier>{23972160-0F65-1566-F8F8-858CE465F1CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\init\signatures">
+      <UniqueIdentifier>{84843EFE-F0E5-1B0C-7953-62BEE5B352CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\init\vtables">
+      <UniqueIdentifier>{D0B23A2F-BCAB-5981-E5DD-3E06D135398D}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\zyra\cheat\sdk\sdk_object.h">
+      <Filter>include\zyra\cheat\sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\init\functions\functions.h">
+      <Filter>include\zyra\init\functions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\init\hooks\hooks.h">
+      <Filter>include\zyra\init\hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\init\signatures\signature_parser.h">
+      <Filter>include\zyra\init\signatures</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\init\signatures\signatures.h">
+      <Filter>include\zyra\init\signatures</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\init\vtables\vtable_parser.h">
+      <Filter>include\zyra\init\vtables</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\init\vtables\vtables.h">
+      <Filter>include\zyra\init\vtables</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\util\access.h">
+      <Filter>include\zyra\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\util\class.h">
+      <Filter>include\zyra\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\util\def.h">
+      <Filter>include\zyra\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\util\enum.h">
+      <Filter>include\zyra\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\util\fnv1a.h">
+      <Filter>include\zyra\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\util\log.h">
+      <Filter>include\zyra\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\util\math_constants.h">
+      <Filter>include\zyra\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\util\mem.h">
+      <Filter>include\zyra\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\util\murmur2.h">
+      <Filter>include\zyra\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\util\str_util.h">
+      <Filter>include\zyra\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\util\string_token.h">
+      <Filter>include\zyra\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\util\vec3.h">
+      <Filter>include\zyra\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\util\vec3.inl">
+      <Filter>include\zyra\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\util\vec4.h">
+      <Filter>include\zyra\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\util\vec4.inl">
+      <Filter>include\zyra\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\util\xorstr.h">
+      <Filter>include\zyra\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\util\xstr.h">
+      <Filter>include\zyra\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zyra\util\zyra_error.h">
+      <Filter>include\zyra\util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\init\functions\module.h">
+      <Filter>src\init\functions</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\init\functions\functions.cpp">
+      <Filter>src\init\functions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\init\functions\module.cpp">
+      <Filter>src\init\functions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\init\hooks\hooks.cpp">
+      <Filter>src\init\hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\init\signatures\signatures.cpp">
+      <Filter>src\init\signatures</Filter>
+    </ClCompile>
+    <ClCompile Include="src\init\vtables\vtables.cpp">
+      <Filter>src\init\vtables</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

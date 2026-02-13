@@ -1,0 +1,3 @@
+build/
+.git/
+out/vs2022/windows/.vs/
