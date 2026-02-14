@@ -3,6 +3,7 @@
 #include <zyra/util/log.h>
 #include <zyra/init/signatures/signatures.h>
 #include <Windows.h>
+#include <string>
 
 
 zyra_begin_

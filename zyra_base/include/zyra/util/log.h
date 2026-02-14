@@ -33,13 +33,13 @@ namespace log {
 
 #else // ZYRA_PUBLIC
 	template <typename... Args>
-	void print_ln(Args&&... args) {}
+	void println(Args&&...) {}
 	template <typename... Args>
-	void print_debug(Args&&... args) {}
+	void print_debug(Args&&...) {}
 	template <typename... Args>
-	void print_warning(Args&&... args) {}
+	void print_warning(Args&&...) {}
 	template <typename... Args>
-	void print_error(Args&&... args) {}
+	void print_error(Args&&...) {}
 #endif // ZYRA_PUBLIC
 }
 
