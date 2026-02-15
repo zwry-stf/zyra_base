@@ -1,3 +1,4 @@
 build/
 .git/
 out/vs2022/windows/.vs/
+/out/vs2026/windows/.vs/zyra.slnx
