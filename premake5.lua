@@ -22,5 +22,12 @@ workspace "zyra"
         
     location ("out/" .. action .. "/" .. host)
     
-dofile("premake5_projects.lua")
-zyra_define_projects(nil, build_root, int_root)
+include "premake/zyra_base.lua"
+
+zyra_base.add_projects(
+    {
+        base = "",
+        build_root = build_root,
+        int_root = int_root,
+    }
+)

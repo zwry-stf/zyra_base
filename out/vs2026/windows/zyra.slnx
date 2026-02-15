@@ -6,6 +6,6 @@
     <Platform Name="Win32" />
     <Platform Name="x64" />
   </Configurations>
-  <Project Path="..\..\..\zyra_base\zyra.vcxproj" Id="8B07A27C-773E-A30D-202B-89100C411F0F">
+  <Project Path="..\..\..\zyra_base\zyra_base.vcxproj" Id="45F72951-B161-DEC7-FA9F-8F6D6649BC1C">
   </Project>
 </Solution>

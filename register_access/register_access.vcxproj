@@ -15,28 +15,28 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8B07A27C-773E-A30D-202B-89100C411F0F}</ProjectGuid>
+    <ProjectGuid>{3BF08914-A77B-F7D8-B08C-7ACD1C9753D9}</ProjectGuid>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>zyra</RootNamespace>
+    <RootNamespace>register_access</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Public|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v145</PlatformToolset>
@@ -56,22 +56,25 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectDir)..\..\..\build\zyra\</OutDir>
-    <IntDir>$(ProjectDir)..\..\..\build\zyra\Debug\x64\</IntDir>
-    <TargetName>zyra_Debug_x64</TargetName>
-    <TargetExt>.lib</TargetExt>
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(ProjectDir)..\..\..\build\register_access\deps\</OutDir>
+    <IntDir>$(ProjectDir)..\..\..\build\register_access\Debug\x64\deps\</IntDir>
+    <TargetName>register_access_Debug_x64</TargetName>
+    <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(ProjectDir)..\..\..\build\zyra\</OutDir>
-    <IntDir>$(ProjectDir)..\..\..\build\zyra\Release\x64\</IntDir>
-    <TargetName>zyra_Release_x64</TargetName>
-    <TargetExt>.lib</TargetExt>
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)..\..\..\build\register_access\deps\</OutDir>
+    <IntDir>$(ProjectDir)..\..\..\build\register_access\Release\x64\deps\</IntDir>
+    <TargetName>register_access_Release_x64</TargetName>
+    <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Public|x64'">
-    <OutDir>$(ProjectDir)..\..\..\build\zyra\</OutDir>
-    <IntDir>$(ProjectDir)..\..\..\build\zyra\Public\x64\</IntDir>
-    <TargetName>zyra_Public_x64</TargetName>
-    <TargetExt>.lib</TargetExt>
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)..\..\..\build\register_access\deps\</OutDir>
+    <IntDir>$(ProjectDir)..\..\..\build\register_access\Public\x64\deps\</IntDir>
+    <TargetName>register_access_Public_x64</TargetName>
+    <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -79,7 +82,6 @@
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PreprocessorDefinitions>R2_PLATFORM_WINDOWS;R2_PLATFORM_WINDOWS_X64;R2_BACKEND_D3D11;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;src;ext;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -92,10 +94,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>..\..\..\build\register_access\deps\register_access_Debug_x64.lib</ImportLibrary>
     </Link>
-    <Lib>
-      <AdditionalDependencies>ext\Detours\detours.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
     <ProjectReference>
     </ProjectReference>
   </ItemDefinitionGroup>
@@ -106,7 +106,6 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <PreprocessorDefinitions>R2_PLATFORM_WINDOWS;R2_PLATFORM_WINDOWS_X64;R2_BACKEND_D3D11;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;src;ext;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -125,10 +124,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <ImportLibrary>..\..\..\build\register_access\deps\register_access_Release_x64.lib</ImportLibrary>
     </Link>
-    <Lib>
-      <AdditionalDependencies>ext\Detours\detours.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
     <ProjectReference>
     </ProjectReference>
   </ItemDefinitionGroup>
@@ -138,8 +135,7 @@
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <PreprocessorDefinitions>R2_PLATFORM_WINDOWS;R2_PLATFORM_WINDOWS_X64;R2_BACKEND_D3D11;NDEBUG;ZYRA_PUBLIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;src;ext;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;R2_PLATFORM_WINDOWS;R2_PLATFORM_WINDOWS_X64;R2_BACKEND_D3D11;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>None</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -161,48 +157,11 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <ImportLibrary>..\..\..\build\register_access\deps\register_access_Public_x64.lib</ImportLibrary>
     </Link>
-    <Lib>
-      <AdditionalDependencies>ext\Detours\detours.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
     <ProjectReference>
     </ProjectReference>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="include\zyra\cheat\sdk\sdk_object.h" />
-    <ClInclude Include="include\zyra\init\functions\functions.h" />
-    <ClInclude Include="include\zyra\init\hooks\hooks.h" />
-    <ClInclude Include="include\zyra\init\signatures\signature_parser.h" />
-    <ClInclude Include="include\zyra\init\signatures\signatures.h" />
-    <ClInclude Include="include\zyra\init\vtables\vtable_parser.h" />
-    <ClInclude Include="include\zyra\init\vtables\vtables.h" />
-    <ClInclude Include="include\zyra\util\access.h" />
-    <ClInclude Include="include\zyra\util\class.h" />
-    <ClInclude Include="include\zyra\util\def.h" />
-    <ClInclude Include="include\zyra\util\enum.h" />
-    <ClInclude Include="include\zyra\util\fnv1a.h" />
-    <ClInclude Include="include\zyra\util\log.h" />
-    <ClInclude Include="include\zyra\util\math_constants.h" />
-    <ClInclude Include="include\zyra\util\mem.h" />
-    <ClInclude Include="include\zyra\util\murmur2.h" />
-    <ClInclude Include="include\zyra\util\str_util.h" />
-    <ClInclude Include="include\zyra\util\string_token.h" />
-    <ClInclude Include="include\zyra\util\vec3.h" />
-    <ClInclude Include="include\zyra\util\vec3.inl" />
-    <ClInclude Include="include\zyra\util\vec4.h" />
-    <ClInclude Include="include\zyra\util\vec4.inl" />
-    <ClInclude Include="include\zyra\util\xorstr.h" />
-    <ClInclude Include="include\zyra\util\xstr.h" />
-    <ClInclude Include="include\zyra\util\zyra_error.h" />
-    <ClInclude Include="src\init\functions\module.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\init\functions\functions.cpp" />
-    <ClCompile Include="src\init\functions\module.cpp" />
-    <ClCompile Include="src\init\hooks\hooks.cpp" />
-    <ClCompile Include="src\init\signatures\signatures.cpp" />
-    <ClCompile Include="src\init\vtables\vtables.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
