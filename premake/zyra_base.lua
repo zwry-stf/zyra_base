@@ -23,23 +23,16 @@ function zyra_base.set_common_project_settings(groups)
 
     for _, cfgpat in ipairs(debug_groups) do
         filter("configurations:" .. cfgpat)
-            symbols "On"
             defines { "_DEBUG" }
     end
 
     for _, cfgpat in ipairs(release_groups) do
         filter("configurations:" .. cfgpat)
-            optimize "On"
-            intrinsics "On"
-            linktimeoptimization "On"
             defines { "NDEBUG" }
     end
     
     for _, cfgpat in ipairs(public_groups) do
         filter("configurations:" .. cfgpat)
-            optimize "On"
-            intrinsics "On"
-            linktimeoptimization "On"
             defines { "NDEBUG", "ZYRA_PUBLIC" }
     end
 
@@ -59,25 +52,6 @@ function zyra_base.add_projects(opts, groups)
         location (join(base, "zyra_base"))
 
         zyra_base.set_common_project_settings(groups)
-        
-        multiprocessorcompile "On"
-        warnings "Extra"
-        fatalwarnings { "All" }
-        
-        filter "configurations:Debug"
-            symbols "On"
-            defines { "_DEBUG" }
-        filter "configurations:Release"
-            optimize "On"
-            intrinsics "On"
-            linktimeoptimization "On"
-            defines { "NDEBUG" }
-        filter "configurations:Public"
-            optimize "On"
-            intrinsics "On"
-            linktimeoptimization "On"
-            defines { "NDEBUG", "ZYRA_PUBLIC" }
-        filter {}
 
         files {
             join(base, "zyra_base/include/**.h"),
