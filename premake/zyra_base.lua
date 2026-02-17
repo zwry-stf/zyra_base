@@ -9,9 +9,9 @@ end
 
 function zyra_base.set_common_project_settings(groups)
     groups = groups or {}
-    local debug_groups   = groups.debug   or { "Debug*" }
+    local debug_groups   = groups.debug or { "Debug*" }
     local release_groups = groups.release or { "Release*" }
-    local public_groups = groups.release or { "Public*" }
+    local public_groups = groups.public or { "Public*" }
 
     language "C++"
     cppdialect "C++23"
