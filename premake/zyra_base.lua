@@ -15,7 +15,6 @@ function zyra_base.set_common_project_settings(groups)
 
     language "C++"
     cppdialect "C++23"
-    staticruntime "Off"
 
     multiprocessorcompile "On"
     warnings "Extra"
@@ -23,16 +22,19 @@ function zyra_base.set_common_project_settings(groups)
 
     for _, cfgpat in ipairs(debug_groups) do
         filter("configurations:" .. cfgpat)
+            runtime "Debug"
             defines { "_DEBUG" }
     end
 
     for _, cfgpat in ipairs(release_groups) do
         filter("configurations:" .. cfgpat)
+            runtime "Release"
             defines { "NDEBUG" }
     end
     
     for _, cfgpat in ipairs(public_groups) do
         filter("configurations:" .. cfgpat)
+            runtime "Release"
             defines { "NDEBUG", "ZYRA_PUBLIC" }
     end
 
