@@ -53,26 +53,26 @@ void* c_hooks::get_original_impl(const string_token& hash)
     std::unreachable();
 }
 
-void c_hooks::register_inline_hook_impl(void** detour, void* target, 
-                                        const string_token& name, const string_token& layer_name)
+void c_hooks::register_inline_hook_impl(void** detour, void* target, const string_token& hook_name, 
+                                        const string_token& target_name, const string_token& layer_name)
 {
 #if defined(_DEBUG)
     for (auto& hook : inline_hooks_)
-        assert(hook.name != name);
+        assert(hook.name != hook_name);
 #endif
 
-    inline_hooks_.emplace_back(layer_name, detour, target, nullptr, name);
+    inline_hooks_.emplace_back(layer_name, detour, target, nullptr, hook_name, target_name);
 }
 
-void c_hooks::register_vtable_hook_impl(void** detour, void* source, 
-                                        const string_token& name, const string_token& layer_name)
+void c_hooks::register_vtable_hook_impl(void** detour, void* source, const string_token& hook_name,
+                                        const string_token& target_name, const string_token& layer_name)
 {
 #if defined(_DEBUG)
     for (auto& hook : vtable_hooks_)
-        assert(hook.name != name);
+        assert(hook.name != hook_name);
 #endif
 
-    vtable_hooks_.emplace_back(layer_name, detour, source, nullptr, name);
+    vtable_hooks_.emplace_back(layer_name, detour, source, nullptr, hook_name, target_name);
 }
 
 void c_hooks::initalize_layer(const string_token& name)
@@ -84,9 +84,9 @@ void c_hooks::initalize_layer(const string_token& name)
             continue;
 
         if (hook.address == nullptr) {
-            hook.address = g_signatures()->try_get<void*>(hook.name);
+            hook.address = g_signatures()->try_get<void*>(hook.target_name);
             if (hook.address == nullptr) {
-                hook.address = g_functions()->get<void*>(hook.name); // will throw
+                hook.address = g_functions()->get<void*>(hook.target_name); // will throw
             }
         }
 
@@ -153,7 +153,7 @@ bool c_hooks::attach_hook(inline_hook_t& hook)
 bool c_hooks::attach_hook(vtable_hook_t& hook)
 {
     if (hook.source == nullptr)
-        hook.source = g_vtables()->get_function_source<void*>(hook.name);
+        hook.source = g_vtables()->get_function_source<void*>(hook.target_name);
 
     DWORD old_protect = 0;
     if (!VirtualProtect(hook.source, sizeof(void*), PAGE_READWRITE, &old_protect)) {

@@ -20,9 +20,10 @@ private:
     struct inline_hook_t {
         string_token layer_name; // the name of the layer
         void* detour = 0;     // the detour to jump to
-        void* address = 0;     // the original functions address
-        void* original = 0;     // the original functions trampoline
-        string_token name;      // the name of the hook and potentially the name to search for (signatures/vtables/functions) if address is 0
+        void* address = 0;    // the original functions address
+        void* original = 0;   // the original functions trampoline
+        string_token name;    // the name of the hook
+        string_token target_name; // name to search for (signatures/vtables/functions) if address is 0
         bool attached{};
     };
     std::vector<inline_hook_t> inline_hooks_;
@@ -31,8 +32,9 @@ private:
         string_token layer_name; // the name of the layer
         void* detour = 0;     // the detour to jump to
         void* source = 0;     // the address where the function pointer will be written to
-        void* original = 0;     // the original function
-        string_token name;      // the name of the hook
+        void* original = 0;   // the original function
+        string_token name;    // the name of the hook
+        string_token target_name;  // name to search for (vtables) if address is 0
         bool attached{};
     };
     std::vector<vtable_hook_t> vtable_hooks_;
@@ -46,34 +48,37 @@ public:
 
 public:
     template <valid_hook Fn, typename A>
-    void register_inline_hook(Fn& detour, A* target,
-                              const string_token& name, const string_token& layer_name) {
+    void register_inline_hook(Fn& detour, A* target, const string_token& hook_name,
+                              const string_token& target_name, const string_token& layer_name) {
         register_inline_hook_impl(
             reinterpret_cast<void**>(&detour),
             reinterpret_cast<void*>(target),
-            name,
+            hook_name,
+            target_name,
             layer_name
         );
     }
 
     template <valid_hook Fn>
-    void register_vtable_hook(Fn& detour, const string_token& name,
-                              const string_token& layer_name) {
+    void register_vtable_hook(Fn& detour, const string_token& hook_name,
+                              const string_token& target_name, const string_token& layer_name) {
         register_vtable_hook_impl(
             reinterpret_cast<void**>(&detour),
             nullptr, /* source */
-            name, 
+            hook_name,
+            target_name,
             layer_name
         );
     }
 
     template <valid_hook Fn, typename A>
-    void register_vtable_hook(Fn& detour, A* source, 
-                              const string_token& name, const string_token& layer_name) {
+    void register_vtable_hook(Fn& detour, A* source, const string_token& hook_name,
+                              const string_token& target_name, const string_token& layer_name) {
         register_vtable_hook_impl(
             reinterpret_cast<void**>(&detour),
             reinterpret_cast<void*>(source),
-            name,
+            hook_name,
+            target_name,
             layer_name
         );
     }
@@ -91,8 +96,8 @@ public:
 private:
     [[nodiscard]] void* get_original_impl(const string_token& hash);
 
-    void register_inline_hook_impl(void** detour, void* target, const string_token& name, const string_token& layer_name);
-    void register_vtable_hook_impl(void** detour, void* source, const string_token& name, const string_token& layer_name);
+    void register_inline_hook_impl(void** detour, void* target, const string_token& hook_name, const string_token& target_name, const string_token& layer_name);
+    void register_vtable_hook_impl(void** detour, void* source, const string_token& hook_name, const string_token& target_name, const string_token& layer_name);
     void pre_init();
     void post_init();
 
@@ -107,29 +112,29 @@ zyra_define_access(c_hooks, g_hooks);
 
 struct global_inline_hook_loader_t {
     template <valid_hook Fn>
-    global_inline_hook_loader_t(Fn& detour, const string_token& name, 
-                                string_token layer_name, string_token debug_feature = string_token()) {
+    global_inline_hook_loader_t(Fn& detour, const string_token& hook_name, const string_token& target,
+                                const string_token& layer_name, string_token debug_feature = string_token()) {
 #if defined(ZYRA_PUBLIC)
         (void)debug_feature;
 #else
         if (g_hooks()->should_block_hook(debug_feature))
             return;
 #endif
-        g_hooks()->register_inline_hook(detour, (char*)nullptr, name, layer_name);
+        g_hooks()->register_inline_hook(detour, (char*)nullptr, hook_name, target, layer_name);
     }
 };
 
 struct global_vtable_hook_loader_t {
     template <valid_hook Fn>
-    global_vtable_hook_loader_t(Fn& detour, const string_token& name, 
-                                string_token layer_name, string_token debug_feature = string_token()) {
+    global_vtable_hook_loader_t(Fn& detour, const string_token& hook_name, const string_token& target,
+                                const string_token& layer_name, string_token debug_feature = string_token()) {
 #if defined(ZYRA_PUBLIC)
         (void)debug_feature;
 #else
         if (g_hooks()->should_block_hook(debug_feature))
             return;
 #endif
-        g_hooks()->register_vtable_hook(detour, name, layer_name);
+        g_hooks()->register_vtable_hook(detour, hook_name, target, layer_name);
     }
 };
 
@@ -147,13 +152,19 @@ static auto _var = ::zyra::g_hooks()->get_original< \
     (_name)
 
 #define zyra_link_inline_hook(_name, _layer_name, _debug_feature) \
+zyra_link_inline_hook_ex(hk##_name, _name, #_name, _layer_name, _debug_feature)
+
+#define zyra_link_inline_hook_ex(_hook, _name, _target, _layer_name, _debug_feature) \
 namespace { \
-    inline static auto _reg_##_name = ::zyra::global_inline_hook_loader_t(hk##_name, #_name, _layer_name, _debug_feature); \
+    inline static auto _reg_##_name = ::zyra::global_inline_hook_loader_t(_hook, #_name, _target, _layer_name, _debug_feature); \
 }
 
 #define zyra_link_vtable_hook(_name, _layer_name, _debug_feature) \
+zyra_link_vtable_hook_ex(hk##_name, _name, #_name, _layer_name, _debug_feature)
+
+#define zyra_link_vtable_hook_ex(_hook, _name, _target, _layer_name, _debug_feature) \
 namespace { \
-    inline static auto _reg_##_name = ::zyra::global_vtable_hook_loader_t(hk##_name, #_name, _layer_name, _debug_feature); \
+    inline static auto _reg_##_name = ::zyra::global_vtable_hook_loader_t(_hook, #_name, _target, _layer_name, _debug_feature); \
 }
 
 zyra_end_
