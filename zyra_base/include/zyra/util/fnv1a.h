@@ -17,15 +17,19 @@ namespace fnv1a {
         );
     }
 
-    [[nodiscard]] inline fnv1a_hash_t hash(const char* string, std::uint64_t key = 0xCBF29CE484222325ULL) {
-        const auto length = std::strlen(string);
-
-        for (std::size_t i = 0U; i < length; ++i) {
-            key ^= string[i];
+    [[nodiscard]] inline fnv1a_hash_t hash_array(const std::uint8_t* data, std::size_t size, std::uint64_t key = 0xCBF29CE484222325ULL) {
+        for (std::size_t i = 0u; i < size; ++i) {
+            key ^= data[i];
             key *= 0x100000001B3ULL;
         }
 
         return key;
+    }
+
+    [[nodiscard]] inline fnv1a_hash_t hash(const char* string, std::uint64_t key = 0xCBF29CE484222325ULL) {
+        const auto length = std::strlen(string);
+
+        return hash_array(reinterpret_cast<const std::uint8_t*>(string), length, key);
     }
 
     consteval fnv1a_hash_t fnv1a_64(const char* s) noexcept {

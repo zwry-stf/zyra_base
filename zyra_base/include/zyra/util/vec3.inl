@@ -314,7 +314,7 @@ template<vec3_type _Type>
 zyra_always_inline _Type vec3_basic<_Type>::get_angle_x() const
 {
     const _Type l2d = length_2d();
-    if (l2d < _Type(1e-7))
+    if (l2d < _Type(1e-12))
         return kNull;
 
     const _Type pitch = std::atan2(-z, l2d) * static_cast<_Type>(math::constants::k_r2d);
@@ -329,10 +329,6 @@ zyra_always_inline _Type vec3_basic<_Type>::get_angle_x() const
 template<vec3_type _Type>
 zyra_always_inline _Type vec3_basic<_Type>::get_angle_y() const
 {
-    const _Type l2d = length_2d();
-    if (l2d < static_cast<_Type>(1e-7))
-        return kNull;
-
     _Type yaw = std::atan2f(y, x) * static_cast<_Type>(math::constants::k_r2d);
 
     while (yaw > _Type(180)) yaw -= _Type(360);
