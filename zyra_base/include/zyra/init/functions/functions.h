@@ -66,7 +66,7 @@ private:
 zyra_define_access(c_functions, g_functions);
 
 
-#define _get_function(_var, _name, _ret, _args) \
+#define zyra_get_function(_var, _name, _ret, _args) \
 static auto _var = ::zyra::g_functions()->get< \
     _ret(*)_args > \
     (_name)
