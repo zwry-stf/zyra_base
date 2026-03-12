@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef assert
+#include <assert.h>
+#endif
+
 
 zyra_begin_
 
@@ -244,6 +248,8 @@ template<vec3_type _Type>
 inline zyra_always_inline vec3_basic<_Type> vec3_basic<_Type>::normalize_angle() const
 {
     vec3_basic<_Type> ret = *this;
+    assert(std::isfinite(ret.x));
+    assert(std::isfinite(ret.y));
     while (ret.y > _Type(180)) ret.y -= _Type(360);
     while (ret.y < _Type(-180)) ret.y += _Type(360);
     ret.x = std::clamp<_Type>(ret.x, _Type(-89), _Type(89));
