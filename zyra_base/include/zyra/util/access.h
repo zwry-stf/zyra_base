@@ -4,15 +4,22 @@
 
 
 template <typename Type>
-requires (std::is_default_constructible_v<Type>)
+    requires (std::is_default_constructible_v<Type>)
 class c_access {
 private:
-    Type value_;
+    static Type& get_instance() noexcept {
+        static Type instance;
+        return instance;
+    }
 
 public:
-    c_access() = default;
+    c_access() {
+        static int instance_count = 0;
+        if (instance_count != 0)
+            __debugbreak(); // only one instance per type should exist
+        instance_count++;
+    }
     ~c_access() = default;
-
     c_access(const c_access&) = delete;
     c_access& operator=(const c_access&) = delete;
     c_access(c_access<Type>&&) = delete;
@@ -20,10 +27,10 @@ public:
 
 public:
     [[nodiscard]] zyra_always_inline Type* operator()() noexcept {
-        return &value_; 
+        return &get_instance();
     }
     [[nodiscard]] zyra_always_inline const Type* operator()() const noexcept {
-        return &value_;
+        return &get_instance();
     }
 };
 
