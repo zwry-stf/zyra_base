@@ -2,6 +2,7 @@
 #include <zyra/util/zyra_error.h>
 #include <zyra/util/log.h>
 #include <zyra/init/vtables/vtables.h>
+#include <zyra/init/xrefs/xrefs.h>
 #include <Windows.h>
 
 
@@ -118,9 +119,13 @@ void* c_signatures::get_impl(const string_token& hash, bool do_try) const
         if (sig.hash == hash)
             return sig.address;
 
-    return do_try ? 
-        g_vtables()->try_get_function<void*>(hash) :
-        g_vtables()->get_function<void*>(hash);
+    void* vtable_fn = g_vtables()->try_get_function<void*>(hash);
+    if (vtable_fn != nullptr)
+        return vtable_fn;
+
+    return do_try ?
+        g_xrefs()->try_get<void*>(hash) :
+        g_xrefs()->get<void*>(hash);
 }
 
 void c_signatures::add(const string_token& name, const xstr& module, const default_signature& signature)
