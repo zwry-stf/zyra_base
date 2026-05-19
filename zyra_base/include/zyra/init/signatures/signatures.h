@@ -4,8 +4,10 @@
 #include <zyra/util/xstr.h>
 #include <zyra/util/string_token.h>
 #include "signature_parser.h"
+
 #include <vector>
 #include <functional>
+#include <type_traits>
 
 
 zyra_begin_
@@ -23,6 +25,9 @@ private:
     bool failed_;
 
     friend class c_hooks;
+
+public:
+    c_signatures() noexcept = default;
 
 public:
     /*

@@ -3,9 +3,11 @@
 #include <zyra/util/access.h>
 #include <zyra/util/string_token.h>
 #include "vtable_parser.h"
-#include <vector>
 #include <zyra/util/xstr.h>
+
+#include <vector>
 #include <functional>
+#include <type_traits>
 
 
 zyra_begin_
@@ -26,6 +28,9 @@ private:
     bool failed_;
 
     friend class c_hooks;
+
+public:
+    c_vtables() noexcept = default;
 
 public:
     /*

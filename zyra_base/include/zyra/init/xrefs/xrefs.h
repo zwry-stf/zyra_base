@@ -23,6 +23,9 @@ private:
     bool failed_;
 
     friend class c_hooks;
+    
+public:
+    c_xrefs() noexcept = default;
 
 public:
     /*

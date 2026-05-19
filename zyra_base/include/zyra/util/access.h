@@ -1,19 +1,19 @@
 #pragma once
 #include <zyra/util/def.h>
-#include <utility>
+#include <concepts>
 
 
 template <typename Type>
     requires (std::default_initializable<Type>)
 class c_access {
 private:
-    static Type& get_instance() noexcept {
+    [[nodiscard]] static Type& get_instance() noexcept {
         static Type instance;
         return instance;
     }
 
 public:
-    c_access() {
+    c_access() noexcept {
 #ifdef _DEBUG
         static int instance_count = 0;
         if (instance_count != 0)

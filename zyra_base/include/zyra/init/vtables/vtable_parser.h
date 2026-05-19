@@ -21,17 +21,17 @@ private:
         constexpr char kTypeDescriptorEnd[] = "@@";
 
         static_assert(
-            (N + _countof(kTypeDescriptorStart) - 1 + _countof(kTypeDescriptorEnd) - 1) <= Count,
+            (N + sizeof(kTypeDescriptorStart) - 1 + sizeof(kTypeDescriptorEnd) - 1) <= Count,
             "vtable string to long"
         );
 
-        for (size_t i = 0; i < _countof(kTypeDescriptorStart) - 1; i++)
+        for (size_t i = 0; i < sizeof(kTypeDescriptorStart) - 1; i++)
             this->bytes_[this->length_++] = static_cast<std::int16_t>(kTypeDescriptorStart[i]) ^ this->key_;
 
         for (size_t i = 0; i < N - 1; i++)
             this->bytes_[this->length_++] = static_cast<std::int16_t>(text[i]) ^ this->key_;
 
-        for (size_t i = 0; i < _countof(kTypeDescriptorEnd) - 1; i++)
+        for (size_t i = 0; i < sizeof(kTypeDescriptorEnd) - 1; i++)
             this->bytes_[this->length_++] = static_cast<std::int16_t>(kTypeDescriptorEnd[i]) ^ this->key_;
         this->bytes_[this->length_++] = static_cast<std::int16_t>('\0') ^ this->key_;
     }
