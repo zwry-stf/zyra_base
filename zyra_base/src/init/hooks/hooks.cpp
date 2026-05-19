@@ -1,5 +1,4 @@
 #include <zyra/init/hooks/hooks.h>
-#include <zyra/util/zyra_error.h>
 #include <zyra/util/log.h>
 #include <zyra/init/signatures/signatures.h>
 #include <zyra/init/vtables/vtables.h>
@@ -75,7 +74,7 @@ void c_hooks::register_vtable_hook_impl(void** detour, void* source, const strin
     vtable_hooks_.emplace_back(layer_name, detour, source, nullptr, hook_name, target_name);
 }
 
-void c_hooks::initalize_layer(const string_token& name)
+bool c_hooks::initalize_layer(const string_token& name)
 {
     pre_init();
 
@@ -86,20 +85,22 @@ void c_hooks::initalize_layer(const string_token& name)
         if (hook.address == nullptr) {
             hook.address = g_signatures()->try_get<void*>(hook.target_name);
             if (hook.address == nullptr) {
-                hook.address = g_functions()->get<void*>(hook.target_name); // will throw
+                hook.address = g_functions()->get<void*>(hook.target_name); // will throw if not found
             }
         }
 
-        if (!attach_hook(hook))
-            throw zyra_error("failed to create hooks");
+        if (!attach_hook(hook)) {
+            return false;
+        }
     }
 
     for (auto& hook : vtable_hooks_) {
         if (hook.layer_name != name)
             continue;
 
-        if (!attach_hook(hook))
-            throw zyra_error("failed to create hooks");
+        if (!attach_hook(hook)) {
+            return false;
+        }
     }
 
     post_init();
@@ -108,8 +109,10 @@ void c_hooks::initalize_layer(const string_token& name)
 void c_hooks::remove_hooks()
 {
     for (auto& hook : inline_hooks_) {
-        if (!hook.attached)
+        if (!hook.attached) {
             continue;
+        }
+
         DetourDetach(&hook.original, hook.detour);
         hook.attached = false;
     }

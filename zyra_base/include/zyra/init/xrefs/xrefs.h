@@ -20,16 +20,9 @@ private:
         string_token hash;
     };
     std::vector<loaded_xref_t> xrefs_;
+    bool failed_;
 
     friend class c_hooks;
-
-#if defined(_DEBUG)
-    bool failed_;
-#endif // _DEBUG
-
-public:
-    c_xrefs();
-    ~c_xrefs() = default;
 
 public:
     /*
@@ -41,7 +34,8 @@ public:
         );
     */
     template <class Fn>
-    void initialize_layer(Fn&& fn) {
+    [[nodiscard]] bool initialize_layer(Fn&& fn) {
+        failed_ = false;
         fn(
             [this]<std::same_as<basic_xstr<char, 128>>... Args>(const string_token& name, const xstr& module, Args&&... args) {
                 this->add(
@@ -51,7 +45,7 @@ public:
                 );
             }
         );
-        on_init();
+        return !failed_;
     }
 
     template <typename T>
@@ -71,7 +65,6 @@ public:
 
 private:
     [[nodiscard]] void* get_impl(const string_token& hash, bool do_try = false) const;
-    void on_init();
 
 private:
     void add(const string_token& name, const xstr& module, const std::vector<basic_xstr<char, 128>>& str);

@@ -1,5 +1,4 @@
 #include <zyra/init/xrefs/xrefs.h>
-#include <zyra/util/zyra_error.h>
 #include <zyra/util/log.h>
 #include <algorithm>
 #include <string>
@@ -107,8 +106,6 @@ void* find_string(const basic_xstr<char, 128>& name, const char* start, const ch
     return nullptr;
 }
 
-c_xrefs::c_xrefs() = default;
-
 void* c_xrefs::get_function_by_xref(const xstr& module, const std::vector<basic_xstr<char, 128>>& strings)
 {
     assert(!strings.empty());
@@ -212,25 +209,13 @@ void* c_xrefs::get_impl(const string_token& hash, bool do_try) const
     std::unreachable();
 }
 
-void c_xrefs::on_init()
-{
-#if defined(_DEBUG)
-    if (failed_)
-        throw zyra_error("failed to find xrefs");
-#endif // _DEBUG
-}
-
 void c_xrefs::add(const string_token& name, const xstr& module, const std::vector<basic_xstr<char, 128>>& strings)
 {
     void* res = get_function_by_xref(module, strings);
     if (res == nullptr) {
         log::print_error("failed to find xref '{}'", name);
-#if defined(_DEBUG)
         failed_ = true;
         return;
-#else
-        throw zyra_error("failed to find xrefs");
-#endif // _DEBUG
     }
 
     log::print_debug("xref '{}' found at {}", name, res);

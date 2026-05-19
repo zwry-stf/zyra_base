@@ -43,7 +43,7 @@ public:
     c_hooks() = default;
 
 public:
-    void initalize_layer(const string_token& name);
+    [[nodiscard]] bool initalize_layer(const string_token& name);
     void destroy();
 
 public:

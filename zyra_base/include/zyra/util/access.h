@@ -4,7 +4,7 @@
 
 
 template <typename Type>
-    requires (std::is_default_constructible_v<Type>)
+    requires (std::default_initializable<Type>)
 class c_access {
 private:
     static Type& get_instance() noexcept {
@@ -14,10 +14,12 @@ private:
 
 public:
     c_access() {
+#ifdef _DEBUG
         static int instance_count = 0;
         if (instance_count != 0)
             __debugbreak(); // only one instance per type should exist
         instance_count++;
+#endif // _DEBUG
     }
     ~c_access() = default;
     c_access(const c_access&) = delete;

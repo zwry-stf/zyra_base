@@ -1,5 +1,4 @@
 #include <zyra/init/vtables/vtables.h>
-#include <zyra/util/zyra_error.h>
 #include <zyra/util/log.h>
 #include <zyra/init/signatures/signatures.h>
 #include <Windows.h>
@@ -7,21 +6,6 @@
 
 
 zyra_begin_
-
-c_vtables::c_vtables()
-#ifdef _DEBUG
-    : failed_(false)
-#endif
-{
-}
-
-void c_vtables::on_init()
-{
-#if defined(_DEBUG)
-    if (failed_)
-        throw zyra_error("failed to find vtables");
-#endif
-}
 
 inline static bool get_section_info(std::uintptr_t base_address, const std::string& section_name,
                                     std::uintptr_t& section_start, std::uintptr_t& section_size)
@@ -161,12 +145,8 @@ void c_vtables::add(const string_token& name, const xstr& module, const default_
     void* res = find_vtable(module, vtable);
     if (res == nullptr) {
         log::print_error("failed to find vtable '{}'", name);
-#ifdef _DEBUG
         failed_ = true;
         return;
-#else
-        throw zyra_error("failed to find vtables");
-#endif
     }
 
     void* address = index == -1 ? res :

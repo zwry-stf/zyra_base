@@ -23,16 +23,9 @@ private:
         string_token hash;
     };
     std::vector<loaded_vtable_t> vtables_;
+    bool failed_;
 
     friend class c_hooks;
-
-#if defined(_DEBUG)
-    bool failed_;
-#endif // _DEBUG
-
-public:
-    c_vtables();
-    ~c_vtables() = default;
 
 public:
     /*
@@ -44,12 +37,13 @@ public:
         );
     */
     template <class Fn>
-    void initialize_layer(Fn&& fn) {
+    [[nodiscard]] bool initialize_layer(Fn&& fn) {
+        failed_ = false;
         fn([this](const string_token& name, const xstr& module, const default_vtable& vtable, int index = -1) {
             this->add(name, module, vtable, index);
             }
         );
-        on_init();
+        return !failed_;
     }
 
     template <typename T>
@@ -82,7 +76,6 @@ public:
 
 private:
     [[nodiscard]] void* get_impl(const string_token& hash, bool function, bool do_try = false) const;
-    void on_init();
 
 private:
     void add(const string_token& name, const xstr& module, const default_vtable& vtable, int index = -1);

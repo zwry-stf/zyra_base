@@ -1,5 +1,4 @@
 #include <zyra/init/signatures/signatures.h>
-#include <zyra/util/zyra_error.h>
 #include <zyra/util/log.h>
 #include <zyra/init/vtables/vtables.h>
 #include <zyra/init/xrefs/xrefs.h>
@@ -7,22 +6,6 @@
 
 
 zyra_begin_
-
-c_signatures::c_signatures()
-#if defined(_DEBUG)
-    : failed_(false)
-#endif // _DEBUG
-{
-}
-
-
-void c_signatures::on_init()
-{
-#if defined(_DEBUG)
-    if (failed_)
-        throw zyra_error("failed to find signatures");
-#endif // _DEBUG
-}
 
 void* c_signatures::find_signature(void* start, void* end,
                                    const default_signature& signature, bool debug)
@@ -96,8 +79,8 @@ void* c_signatures::find_signature(const xstr& _m, const default_signature& sign
         if ((s.Characteristics & IMAGE_SCN_MEM_EXECUTE) == 0)
             continue;
 
-        std::uintptr_t base = mod + s.VirtualAddress;
-        std::size_t len = s.Misc.VirtualSize ? s.Misc.VirtualSize : s.SizeOfRawData;
+        const std::uintptr_t base = mod + s.VirtualAddress;
+        const std::size_t len = s.Misc.VirtualSize != 0 ? s.Misc.VirtualSize : s.SizeOfRawData;
         void* res = find_signature(
             reinterpret_cast<void*>(base),
             reinterpret_cast<void*>(base + len),
@@ -138,12 +121,8 @@ void c_signatures::add(const string_token& name, const xstr& module, const defau
     void* ret = find_signature(module, signature);
     if (ret == nullptr) {
         log::print_error("failed to find signature '{}'", name);
-#if defined(_DEBUG)
         failed_ = true;
         return;
-#else
-        throw zyra_error("failed to find signatures");
-#endif // _DEBUG
     }
 
     log::print_debug("signature '{}' found at {}", name, ret);

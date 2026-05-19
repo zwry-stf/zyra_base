@@ -20,16 +20,9 @@ private:
         string_token hash;
     };
     std::vector<loaded_signature_t> signatures_;
+    bool failed_;
 
     friend class c_hooks;
-
-#if defined(_DEBUG)
-    bool failed_;
-#endif // _DEBUG
-
-public:
-    c_signatures();
-    ~c_signatures() = default;
 
 public:
     /*
@@ -41,12 +34,13 @@ public:
         );
     */
     template <class Fn>
-    void initialize_layer(Fn&& fn) {
+    [[nodiscard]] bool initialize_layer(Fn&& fn) {
+        failed_ = false;
         fn([this](const string_token& name, const xstr& module, const default_signature& signature) {
             this->add(name, module, signature);
             }
         );
-        on_init();
+        return !failed_;
     }
 
     template <typename T>
@@ -67,7 +61,6 @@ public:
 
 private:
     [[nodiscard]] void* get_impl(const string_token& hash, bool do_try = false) const;
-    void on_init();
 
 private:
     void add(const string_token& name, const xstr& module, const default_signature& signature);

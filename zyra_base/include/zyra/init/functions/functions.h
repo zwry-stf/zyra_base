@@ -19,6 +19,7 @@ private:
         string_token hash;
     };
     std::vector<loaded_function_t> functions_;
+    bool failed_;
 
     friend class c_hooks;
 
@@ -39,7 +40,8 @@ public:
             std::function<void(const string_token&, const xstr&, const basic_xstr<char, 156>&)>,
             std::function<void(const string_token& name, void* address)>
         >)
-    void initialize_layer(Fn&& fn) {
+    [[nodiscard]] bool initialize_layer(Fn&& fn) {
+        failed_ = false;
         fn([this](const string_token& name, const xstr& module, const basic_xstr<char, 156>& export_name) {
             this->add_exported(name, module, export_name);
             },
@@ -47,6 +49,7 @@ public:
                 this->add(name, address);
             }
         );
+        return !failed_;
     }
 
     template <typename T>

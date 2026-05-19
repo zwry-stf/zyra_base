@@ -1,5 +1,4 @@
 #include <zyra/init/functions/functions.h>
-#include <zyra/util/zyra_error.h>
 #include <zyra/util/log.h>
 #include "module.h"
 
@@ -26,7 +25,8 @@ void c_functions::add_exported(const string_token& name, const xstr& module, con
     void* res = ::zyra::module::get_export(module, export_name);
     if (res == nullptr) {
         log::print_error("failed to find function '{}'", name);
-        throw zyra_error("failed to find functions");
+        failed_ = true;
+        return;
     }
 
     log::print_debug("found function '{}' at {:p}", name, res);
