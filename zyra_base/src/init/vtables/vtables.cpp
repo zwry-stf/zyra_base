@@ -72,7 +72,7 @@ void* c_vtables::find_vtable(const xstr& _m, const default_vtable& vtable)
     if (rtti_type_descriptor == 0)
         return nullptr;
 
-    rtti_type_descriptor -= 0x10u;
+    rtti_type_descriptor -= sizeof(void*) * 2;
 
     std::uintptr_t rdata_start = 0u, rdata_size = 0u;
     if (!get_section_info(base_address, ".rdata", rdata_start, rdata_size))
@@ -80,26 +80,40 @@ void* c_vtables::find_vtable(const xstr& _m, const default_vtable& vtable)
 
     std::vector<std::uintptr_t> xrefs = {};
     {
-        std::uintptr_t address = rtti_type_descriptor - base_address;
+        std::uintptr_t rel_address = rtti_type_descriptor - base_address;
+        if (rel_address > (std::numeric_limits<std::uint32_t>::max)()) {
+            return nullptr;
+        }
+
+        const auto rel_address_uint32 = static_cast<std::uint32_t>(rel_address);
+
         std::uintptr_t start = rdata_start;
         const std::uintptr_t end = start + rdata_size;
         while (start != 0 && start < end) {
-            std::uintptr_t xref = (std::uintptr_t)g_signatures()->find_signature((void*)start, (void*)(end),
-                default_signature::from_bytes(reinterpret_cast<uint8_t*>(&address), sizeof(uint32_t)));
+            std::uintptr_t xref = (std::uintptr_t)g_signatures()->find_signature(
+                reinterpret_cast<void*>(start), 
+                reinterpret_cast<void*>(end),
+                default_signature::from_bytes(
+                    reinterpret_cast<const std::uint8_t*>(&rel_address_uint32), 
+                    sizeof(uint32_t)
+                )
+            );
             if (xref == 0)
                 break;
 
             xrefs.push_back(xref);
-            start = xref + 4;
+            start = xref + sizeof(void*);
         }
     }
 
     for (const std::uintptr_t xref : xrefs) {
-        const std::int32_t offset_from_class = *(int32_t*)(xref - 0x8);
+        const std::int32_t offset_from_class = *reinterpret_cast<std::int32_t*>(
+            xref - sizeof(std::int32_t) * 2
+        );
         if (offset_from_class != 0)
             continue;
 
-        std::uintptr_t object_locator = xref - 0xC;
+        std::uintptr_t object_locator = xref - sizeof(std::int32_t) * 3;
 
         std::uintptr_t vtable_address = reinterpret_cast<std::uintptr_t>(
             g_signatures()->find_signature((void*)rdata_start, (void*)(rdata_start + rdata_size),
@@ -110,7 +124,7 @@ void* c_vtables::find_vtable(const xstr& _m, const default_vtable& vtable)
         if (vtable_address == 0)
             continue;
 
-        vtable_address += sizeof(std::uintptr_t);
+        vtable_address += sizeof(void*);
 
         return (void**)vtable_address;
     }

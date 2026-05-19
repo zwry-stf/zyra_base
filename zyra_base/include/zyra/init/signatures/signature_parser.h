@@ -44,7 +44,7 @@ public:
     {
     }
 
-    [[nodiscard]] static signature_parser<Count> from_bytes(std::uint8_t* bytes, std::size_t l) {
+    [[nodiscard]] static signature_parser<Count> from_bytes(const std::uint8_t* bytes, std::size_t l) {
         signature_parser<Count> ret;
         for (std::size_t i = 0u; i < l; i++)
             ret.bytes_[ret.length_++] = static_cast<std::int16_t>(bytes[i]) ^ ret.key_;

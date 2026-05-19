@@ -69,6 +69,8 @@ public:
     [[nodiscard]] zyra_always_inline constexpr bool is_zero() const;
 
     [[nodiscard]] zyra_always_inline constexpr vec4_basic<_Type> lerp(const vec4_basic<_Type>& v, const _Type t) const;
+
+    [[nodiscard]] zyra_always_inline static constexpr vec4_basic<_Type> cross(const vec4_basic<_Type>& v1, const vec4_basic<_Type>& v2, const vec4_basic<_Type>& v3);
 };
 
 using vec4 = vec4_basic<float>;

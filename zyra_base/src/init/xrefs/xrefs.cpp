@@ -2,6 +2,7 @@
 #include <zyra/util/zyra_error.h>
 #include <zyra/util/log.h>
 #include <algorithm>
+#include <string>
 #include <Windows.h>
 
 
@@ -10,7 +11,8 @@ zyra_begin_
 void* find_function_start(char* address, char* text_start) {
     while (address - 1 > text_start) {
         if (static_cast<std::uint8_t>(*--address) == 0xCCu &&
-            static_cast<std::uint8_t>(*(address - 1)) == 0xCCu) {
+            (static_cast<std::uint8_t>(*(address - 1)) == 0xCCu ||
+                static_cast<std::uint8_t>(*(address - 1)) == 0xC3u)) {
             return address + 1;
         }
     }
