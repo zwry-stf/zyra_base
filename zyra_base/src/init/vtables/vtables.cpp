@@ -135,8 +135,22 @@ void* c_vtables::get_impl(const string_token& hash, bool function, bool do_try) 
     std::unreachable();
 }
 
-void c_vtables::add(const string_token& name, const xstr& module, const default_vtable& vtable, int index)
+void c_vtables::add(const string_token& name, const xstr& module, const vtable_t& vtable, int index)
 {
+#ifdef ZYRA_PUBLIC
+    (void)module;
+    if (!vtable.is_patched) {
+        failed_ = true;
+        return;
+    }
+
+    void* address = reinterpret_cast<void*>(vtable.pointer);
+    if (index != -1) {
+        address = reinterpret_cast<void**>(vtable.pointer) + index;
+    }
+
+    vtables_.emplace_back(address, name);
+#else
 #if defined(_DEBUG)
     for (auto& vft : vtables_)
         assert(vft.hash != name);
@@ -158,6 +172,7 @@ void c_vtables::add(const string_token& name, const xstr& module, const default_
     vtables_.emplace_back(index == -1, address, name);
 #else
     vtables_.emplace_back(address, name);
+#endif
 #endif
 }
 

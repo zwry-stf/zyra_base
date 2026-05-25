@@ -12,6 +12,22 @@
 
 zyra_begin_
 
+struct replacable_signature_t {
+public:
+    inline static std::uint64_t constexpr k_magic_value = 0x7439a69243bf2962ull;
+
+    std::uint64_t magic{ k_magic_value };
+    bool is_patched{ false };
+    union {
+        default_signature raw_signature;
+        std::uintptr_t pointer;
+    };
+
+    template <std::size_t N>
+    consteval replacable_signature_t(const char(&sig)[N])
+        : raw_signature(sig) { }
+};
+
 class c_signatures {
     zyra_remove_copy_constructor(c_signatures);
     zyra_remove_move_constructor(c_signatures);
@@ -29,6 +45,12 @@ private:
 public:
     c_signatures() noexcept = default;
 
+#ifndef ZYRA_PUBLIC
+    using signature_t = default_signature;
+#else
+    using signature_t = replacable_signature_t;
+#endif // ZYRA_PUBLIC
+
 public:
     /*
         usage:
@@ -41,7 +63,7 @@ public:
     template <class Fn>
     [[nodiscard]] bool initialize_layer(Fn&& fn) {
         failed_ = false;
-        fn([this](const string_token& name, const xstr& module, const default_signature& signature) {
+        fn([this](const string_token& name, const xstr& module, const signature_t& signature) {
             this->add(name, module, signature);
             }
         );
@@ -60,15 +82,14 @@ public:
         return reinterpret_cast<T>(get_impl(hash, true));
     }
 
+    void add(const string_token& name, const xstr& module, const signature_t& signature);
+
 public:
     [[nodiscard]] void* find_signature(const xstr& module, const default_signature& signature);
     [[nodiscard]] void* find_signature(void* start, void* end, const default_signature& signature, bool debug = false);
 
 private:
     [[nodiscard]] void* get_impl(const string_token& hash, bool do_try = false) const;
-
-private:
-    void add(const string_token& name, const xstr& module, const default_signature& signature);
 };
 
 zyra_define_access(c_signatures, g_signatures);

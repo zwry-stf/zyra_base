@@ -12,6 +12,22 @@
 
 zyra_begin_
 
+struct replacable_vtable_t {
+public:
+    inline static std::uint64_t constexpr k_magic_value = 0x1034a0fcd0953432ull;
+
+    std::uint64_t magic{ k_magic_value };
+    bool is_patched{ false };
+    union {
+        default_vtable raw_vtable;
+        std::uintptr_t pointer;
+    };
+
+    template <std::size_t N>
+    consteval replacable_vtable_t(const char(&vtable)[N])
+        : raw_vtable(vtable) { }
+};
+
 class c_vtables {
     zyra_remove_copy_constructor(c_vtables);
     zyra_remove_move_constructor(c_vtables);
@@ -32,6 +48,12 @@ private:
 public:
     c_vtables() noexcept = default;
 
+#ifndef ZYRA_PUBLIC
+    using vtable_t = default_vtable;
+#else
+    using vtable_t = replacable_vtable_t;
+#endif // ZYRA_PUBLIC
+
 public:
     /*
         usage:
@@ -44,7 +66,7 @@ public:
     template <class Fn>
     [[nodiscard]] bool initialize_layer(Fn&& fn) {
         failed_ = false;
-        fn([this](const string_token& name, const xstr& module, const default_vtable& vtable, int index = -1) {
+        fn([this](const string_token& name, const xstr& module, const vtable_t& vtable, int index = -1) {
             this->add(name, module, vtable, index);
             }
         );
@@ -83,7 +105,7 @@ private:
     [[nodiscard]] void* get_impl(const string_token& hash, bool function, bool do_try = false) const;
 
 private:
-    void add(const string_token& name, const xstr& module, const default_vtable& vtable, int index = -1);
+    void add(const string_token& name, const xstr& module, const vtable_t& vtable, int index = -1);
 };
 
 zyra_define_access(c_vtables, g_vtables);

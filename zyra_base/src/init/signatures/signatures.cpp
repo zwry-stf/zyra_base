@@ -111,12 +111,23 @@ void* c_signatures::get_impl(const string_token& hash, bool do_try) const
         g_xrefs()->get<void*>(hash);
 }
 
-void c_signatures::add(const string_token& name, const xstr& module, const default_signature& signature)
+void c_signatures::add(const string_token& name, const xstr& module, const signature_t& signature)
 {
+#ifdef ZYRA_PUBLIC
+    (void)module;
+    if (!signature.is_patched) {
+        failed_ = true;
+        return;
+    }
+    signatures_.emplace_back(
+        reinterpret_cast<void*>(signature.pointer),
+        name
+    );
+#else
 #if defined(_DEBUG)
     for (auto& sig : signatures_)
         assert(sig.hash != name);
-#endif
+#endif // _DEBUG
 
     void* ret = find_signature(module, signature);
     if (ret == nullptr) {
@@ -128,6 +139,7 @@ void c_signatures::add(const string_token& name, const xstr& module, const defau
     log::print_debug("signature '{}' found at {}", name, ret);
 
     signatures_.emplace_back(ret, name);
+#endif // ZYRA_PUBLIC
 }
 
 zyra_end_
