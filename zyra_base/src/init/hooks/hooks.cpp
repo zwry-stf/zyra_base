@@ -104,6 +104,8 @@ bool c_hooks::initalize_layer(const string_token& name)
     }
 
     post_init();
+
+    return true;
 }
 
 void c_hooks::remove_hooks()

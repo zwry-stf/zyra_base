@@ -20,63 +20,64 @@ public:
     Type x, y, z;
 
 public:
-    zyra_always_inline constexpr vec3_basic();
-    zyra_always_inline constexpr vec3_basic(const Type x, const Type y, const Type z);
-    zyra_always_inline constexpr explicit vec3_basic(const Type v);
+    zyra_always_inline constexpr vec3_basic() noexcept;
+    zyra_always_inline constexpr vec3_basic(const Type x, const Type y, const Type z) noexcept;
+    zyra_always_inline constexpr explicit vec3_basic(const Type v) noexcept;
 
-    constexpr vec3_basic(const vec3_basic&) = default;
-    constexpr vec3_basic(vec3_basic&&) = default;
-    constexpr vec3_basic& operator=(const vec3_basic&) = default;
-    constexpr vec3_basic& operator=(vec3_basic&&) = default;
-    ~vec3_basic() = default;
-
-public:
-    zyra_always_inline constexpr vec3_basic<Type>& operator+=(const vec3_basic<Type>& v);
-    zyra_always_inline constexpr vec3_basic<Type>& operator-=(const vec3_basic<Type>& v);
-    zyra_always_inline constexpr vec3_basic<Type>& operator*=(const vec3_basic<Type>& v);
-    zyra_always_inline constexpr vec3_basic<Type>& operator/=(const vec3_basic<Type>& v);
-    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type>  operator+(const vec3_basic<Type>& v) const;
-    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type>  operator-(const vec3_basic<Type>& v) const;
-    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type>  operator*(const vec3_basic<Type>& v) const;
-    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type>  operator/(const vec3_basic<Type>& v) const;
-
-    zyra_always_inline constexpr vec3_basic<Type>& operator+=(const Type v);
-    zyra_always_inline constexpr vec3_basic<Type>& operator-=(const Type v);
-    zyra_always_inline constexpr vec3_basic<Type>& operator*=(const Type v);
-    zyra_always_inline constexpr vec3_basic<Type>& operator/=(const Type v);
-    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type>  operator+(const Type v) const;
-    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type>  operator-(const Type v) const;
-    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type>  operator*(const Type v) const;
-    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type>  operator/(const Type v) const;
-
-    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type>  operator-() const;
-
-    [[nodiscard]] zyra_always_inline constexpr bool operator==(const vec3_basic<Type>& v) const;
-    [[nodiscard]] zyra_always_inline constexpr bool operator!=(const vec3_basic<Type>& v) const;
-    [[nodiscard]] zyra_always_inline constexpr bool operator==(const Type v) const;
-    [[nodiscard]] zyra_always_inline constexpr bool operator!=(const Type v) const;
+    zyra_always_inline constexpr vec3_basic(const vec3_basic&) noexcept = default;
+    zyra_always_inline constexpr vec3_basic(vec3_basic&&) noexcept = default;
+    zyra_always_inline constexpr vec3_basic& operator=(const vec3_basic&) noexcept = default;
+    zyra_always_inline constexpr vec3_basic& operator=(vec3_basic&&) noexcept = default;
+    zyra_always_inline ~vec3_basic() noexcept = default;
 
 public:
-    [[nodiscard]] zyra_always_inline Type length() const;
-    [[nodiscard]] zyra_always_inline Type length_2d() const;
-    [[nodiscard]] zyra_always_inline vec3_basic<Type> normalize() const;
-    [[nodiscard]] zyra_always_inline vec3_basic<Type> normalize_angle() const;
+    zyra_always_inline constexpr vec3_basic<Type>& operator+=(const vec3_basic<Type>& v) noexcept;
+    zyra_always_inline constexpr vec3_basic<Type>& operator-=(const vec3_basic<Type>& v) noexcept;
+    zyra_always_inline constexpr vec3_basic<Type>& operator*=(const vec3_basic<Type>& v) noexcept;
+    zyra_always_inline constexpr vec3_basic<Type>& operator/=(const vec3_basic<Type>& v) noexcept;
+    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type>  operator+(const vec3_basic<Type>& v) const noexcept;
+    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type>  operator-(const vec3_basic<Type>& v) const noexcept;
+    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type>  operator*(const vec3_basic<Type>& v) const noexcept;
+    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type>  operator/(const vec3_basic<Type>& v) const noexcept;
 
-    [[nodiscard]] zyra_always_inline constexpr Type dot(const vec3_basic<Type>& v) const;
-    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type> cross(const vec3_basic<Type>& v) const;
+    zyra_always_inline constexpr vec3_basic<Type>& operator+=(const Type v) noexcept;
+    zyra_always_inline constexpr vec3_basic<Type>& operator-=(const Type v) noexcept;
+    zyra_always_inline constexpr vec3_basic<Type>& operator*=(const Type v) noexcept;
+    zyra_always_inline constexpr vec3_basic<Type>& operator/=(const Type v) noexcept;
+    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type>  operator+(const Type v) const noexcept;
+    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type>  operator-(const Type v) const noexcept;
+    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type>  operator*(const Type v) const noexcept;
+    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type>  operator/(const Type v) const noexcept;
 
-    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type> to_rad() const;
-    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type> to_deg() const;
+    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type>  operator-() const noexcept;
 
-    [[nodiscard]] zyra_always_inline constexpr bool is_zero() const;
+    [[nodiscard]] zyra_always_inline constexpr bool operator==(const vec3_basic<Type>& v) const noexcept;
+    [[nodiscard]] zyra_always_inline constexpr bool operator!=(const vec3_basic<Type>& v) const noexcept;
+    [[nodiscard]] zyra_always_inline constexpr bool operator==(const Type v) const noexcept;
+    [[nodiscard]] zyra_always_inline constexpr bool operator!=(const Type v) const noexcept;
 
-    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type> lerp(const vec3_basic<Type>& v, const Type t) const;
+public:
+    [[nodiscard]] zyra_always_inline Type length() const noexcept;
+    [[nodiscard]] zyra_always_inline Type length_2d() const noexcept;
+    [[nodiscard]] zyra_always_inline vec3_basic<Type> normalize() const noexcept;
+    [[nodiscard]] zyra_always_inline vec3_basic<Type> normalize_angle() const noexcept;
 
-    zyra_always_inline void to_directions(vec3_basic<Type>* forward, vec3_basic<Type>* right, vec3_basic<Type>* up) const;
+    [[nodiscard]] zyra_always_inline constexpr Type dot(const vec3_basic<Type>& v) const noexcept;
+    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type> cross(const vec3_basic<Type>& v) const noexcept;
 
-    [[nodiscard]] zyra_always_inline Type get_angle_x() const;
-    [[nodiscard]] zyra_always_inline Type get_angle_y() const;
-    [[nodiscard]] zyra_always_inline vec3_basic<Type> to_angles() const;
+    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type> to_rad() const noexcept;
+    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type> to_deg() const noexcept;
+
+    [[nodiscard]] zyra_always_inline constexpr bool is_zero() const noexcept;
+
+    [[nodiscard]] zyra_always_inline constexpr vec3_basic<Type> lerp(const vec3_basic<Type>& v, const Type t) const noexcept;
+
+    zyra_always_inline void to_directions(vec3_basic<Type>* forward, vec3_basic<Type>* right, vec3_basic<Type>* up) const noexcept;
+    zyra_always_inline void angle_vectors(vec3_basic<Type>* forward, vec3_basic<Type>* left, vec3_basic<Type>* up) const noexcept;
+
+    [[nodiscard]] zyra_always_inline Type get_angle_x() const noexcept;
+    [[nodiscard]] zyra_always_inline Type get_angle_y() const noexcept;
+    [[nodiscard]] zyra_always_inline vec3_basic<Type> to_angles() const noexcept;
 };
 
 using vec3 = vec3_basic<float>;
